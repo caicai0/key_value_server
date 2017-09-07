@@ -40,5 +40,24 @@ var get = async function (ctx,next) {
     }
 }
 
+var exist = async function (ctx, next) {
+    try{
+        var url = ctx.request.body.url;
+        if(url){
+            var htmls = await data.asyncFindLink(url);
+            if(htmls && htmls.length){
+                ctx.body = JSON.stringify({code:0});
+            }else{
+                ctx.body = JSON.stringify({code:1,errMessage:'不存在'});
+            }
+        }else{
+            ctx.body = JSON.stringify({code:1,errMessage:'参数不全',url:url});
+        }
+    }catch(e){
+        ctx.throw(1000, e);
+    }
+}
+
 module.exports.save = save;
 module.exports.get = get;
+module.exports.exist = exist;
